@@ -1,0 +1,16 @@
+PODS:
+  - MytestADSDKDemo (1.1.0)
+
+DEPENDENCIES:
+  - MytestADSDKDemo (from `../`)
+
+EXTERNAL SOURCES:
+  MytestADSDKDemo:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  MytestADSDKDemo: 1f0067ca1d797a508047dbe6fba5c16aab951a86
+
+PODFILE CHECKSUM: 1f8ec71ed3750df968e01c55dbb77403b36e084e
+
+COCOAPODS: 1.10.0
