@@ -32,9 +32,9 @@ Pod::Spec.new do |s|
 
   s.source_files = 'MytestADSDKDemo/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'MytestADSDKDemo' => ['MytestADSDKDemo/Assets/*.png']
-  # }
+   s.resource_bundles = {
+     'MytestADSDKDemo' => ['MytestADSDKDemo/Assets/*']
+   }
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
