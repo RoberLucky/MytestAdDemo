@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MytestADSDKDemo'
-  s.version          = '2.2.3'
+  s.version          = '2.2.4'
   s.summary          = 'A short description of MytestADSDKDemo.'
 
 # This description is used to generate tags and improve search results.
@@ -38,5 +38,6 @@ Pod::Spec.new do |s|
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
+  s.dependency 'AFNetworking'
   s.dependency 'Google-Mobile-Ads-SDK', '7.68.0', :podspec => 'https://github.com/CocoaPods/Specs.git'
 end
