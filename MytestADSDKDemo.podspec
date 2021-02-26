@@ -38,14 +38,39 @@ Pod::Spec.new do |s|
    
    s.subspec 'Aps' do |aa|
    aa.source_files = 'MytestADSDKDemo/Classes/Aps/*'
+   aa.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
+   aa.dependency 'AmazonPublisherServicesSDK', '3.4.2'
+   end
+   
+   s.subspec 'Mopub-plugin' do |pp|
+   pp.source_files = 'MytestADSDKDemo/Classes/Mopub-plugin/*'
+   end
+   
+   s.subspec 'Mediation' do |mm|
+     mm.subspec 'AppLovin' do |ap|
+       ap.source_files = 'MytestADSDKDemo/Classes/Mediation/AppLovin/*'
+       ap.dependency 'AppLovinSDK', '6.14.9'
+     end
+     mm.subspec 'FaceBook' do |ff|
+       ff.source_files = 'MytestADSDKDemo/Classes/Mediation/FaceBook/*'
+       ff.dependency 'FBAudienceNetwork', '6.2.1'
+     end
+     mm.subspec 'IronSource' do |ii|
+       ii.source_files = 'MytestADSDKDemo/Classes/Mediation/IronSource/*'
+       ii.dependency 'IronSourceSDK', '7.0.4.0'
+     end
+     mm.subspec 'AdMob' do |ad|
+       ad.source_files = 'MytestADSDKDemo/Classes/Mediation/MoPub-AdMob-Adapters/*'
+       ad.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
+     end
    end
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
-  s.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
-  s.dependency 'IronSourceSDK', '7.0.4.0'
-  s.dependency 'AppLovinSDK', '6.14.9'
-  s.dependency 'FBAudienceNetwork', '6.2.1'
-  s.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
-  s.dependency 'AmazonPublisherServicesSDK', '3.4.2'
+  #s.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
+  #s.dependency 'IronSourceSDK', '7.0.4.0'
+  #s.dependency 'AppLovinSDK', '6.14.9'
+  #s.dependency 'FBAudienceNetwork', '6.2.1'
+  #s.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
+  #s.dependency 'AmazonPublisherServicesSDK', '3.4.2'
 end
