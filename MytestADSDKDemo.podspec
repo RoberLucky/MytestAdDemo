@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'MytestADSDKDemo'
+  s.source_files = ['MytestADSDKDemo/Classes/Aps/*','MytestADSDKDemo/Classes/Mediation/*','MytestADSDKDemo/Classes/Mopub-plugin/*']
   
    s.resource_bundles = {
      'MytestADSDKDemo' => ['MytestADSDKDemo/Assets/*']
