@@ -30,11 +30,15 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '10.0'
 
-  s.source_files = ['MytestADSDKDemo/Classes/Mopub-plugin/*']
+  s.source_files = 'MytestADSDKDemo'
   
    s.resource_bundles = {
      'MytestADSDKDemo' => ['MytestADSDKDemo/Assets/*']
    }
+   
+   s.subspec 'Aps' do |aa|
+   aa.source_files = 'MytestADSDKDemo/Classes/Aps/*'
+   end
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
