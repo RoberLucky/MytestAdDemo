@@ -48,19 +48,19 @@ Pod::Spec.new do |s|
    
    s.subspec 'Mediation' do |mm|
      mm.subspec 'AppLovin' do |ap|
-       ap.source_files = 'MytestADSDKDemo/Classes/Mediation/AppLovin/*'
+       ap.source_files = 'MytestADSDKDemo/Classes/Mediation/AppLovin/Network/*'
        ap.dependency 'AppLovinSDK', '6.14.9'
      end
      mm.subspec 'FaceBook' do |ff|
-       ff.source_files = 'MytestADSDKDemo/Classes/Mediation/FaceBook/*'
+       ff.source_files = 'MytestADSDKDemo/Classes/Mediation/FaceBook/NetWork/*'
        ff.dependency 'FBAudienceNetwork', '6.2.1'
      end
      mm.subspec 'IronSource' do |ii|
-       ii.source_files = 'MytestADSDKDemo/Classes/Mediation/IronSource/*'
+       ii.source_files = 'MytestADSDKDemo/Classes/Mediation/IronSource/Network/*'
        ii.dependency 'IronSourceSDK', '7.0.4.0'
      end
      mm.subspec 'AdMob' do |ad|
-       ad.source_files = 'MytestADSDKDemo/Classes/Mediation/MoPub-AdMob-Adapters/*'
+       ad.source_files = 'MytestADSDKDemo/Classes/Mediation/MoPub-AdMob-Adapters/AdMob/*'
        ad.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
      end
    end
