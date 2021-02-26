@@ -38,6 +38,6 @@ Pod::Spec.new do |s|
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
-  s.dependency 'AFNetworking'
-  s.dependency 'Google-Mobile-Ads-SDK', '7.68.0', :podspec => 'https://github.com/CocoaPods/Specs.git'
+  s.dependency 'AFNetworking', '~> 2.3'
+  #s.dependency 'Google-Mobile-Ads-SDK', '7.68.0', :podspec => 'https://github.com/CocoaPods/Specs.git'
 end
