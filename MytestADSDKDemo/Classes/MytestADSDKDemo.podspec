@@ -39,4 +39,5 @@ Pod::Spec.new do |s|
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
   s.dependency 'Google-Mobile-Ads-SDK', '~> 7.68.0'
+  s.dependency 'AppLovinSDK', '~> 6.14.9'
 end
