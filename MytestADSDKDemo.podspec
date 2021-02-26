@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/RoberLucky/MytestAdDemo.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'MytestADSDKDemo/Classes/**/*'
   
@@ -42,4 +42,6 @@ Pod::Spec.new do |s|
   s.dependency 'IronSourceSDK', '7.0.4.0'
   s.dependency 'AppLovinSDK', '6.14.9'
   s.dependency 'FBAudienceNetwork', '6.2.1'
+  s.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
+  s.dependency 'AmazonPublisherServicesSDK', '3.4.2'
 end
