@@ -66,12 +66,17 @@ typedef void (*MoPubBackgroundEventCallback)(const char* eventName, const char* 
 }
 @property (class, nonatomic) MoPubBackgroundEventCallback bgEventCallback;
 @property (nonatomic, strong) MPAdView* adView;
+@property (nonatomic, strong) MPAdView* secondAdView;
 @property (nonatomic, strong) MPNativeAd *nativeAd;
 @property (nonatomic, strong) MPNativeAdRequest *adRequest;
 @property (nonatomic, strong) UIView *nativeV;
 @property (nonatomic, strong) CLLocationManager* locationManager;
 @property (nonatomic, strong) CLLocation* lastKnownLocation;
 @property (nonatomic, assign) BOOL nativeIsLoad;
+@property (nonatomic, assign) BOOL firstBannerIsLoad;
+@property (nonatomic, assign) BOOL secondBannerIsLoad;
+@property (nonatomic, assign) BOOL firstBannerIsShowing;
+@property (nonatomic, assign) BOOL secondBannerIsShowing;
 @property (nonatomic, assign) CGSize nativeADSize;
 @property (nonatomic) MoPubAdPosition bannerPosition;
 @property (nonatomic) NativePosition nativePosition;
@@ -91,6 +96,8 @@ typedef void (*MoPubBackgroundEventCallback)(const char* eventName, const char* 
 + (void)sendUnityEvent:(NSString*)eventName withArgs:(NSArray*)args backgroundOK:(BOOL)bg;
 
 + (void)sendUnityEvent:(NSString*)eventName withArgs:(NSArray*)args;
+
++ (void)setUnityPauseEvent:(BOOL)pause;
 
 - (void)sendUnityEvent:(NSString*)eventName backgroundOK:(BOOL)bg;
 

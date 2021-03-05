@@ -30,47 +30,28 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'MytestADSDKDemo'
-  
+  s.source_files = 'MytestADSDKDemo/Classes/**/*'
+  s.static_framework = true
    s.resource_bundles = {
      'MytestADSDKDemo' => ['MytestADSDKDemo/Assets/*']
    }
    
-   s.subspec 'Aps' do |aa|
-   aa.source_files = 'MytestADSDKDemo/Classes/Aps/*'
-   aa.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
-   aa.dependency 'AmazonPublisherServicesSDK', '3.4.2'
-   end
-   
-   s.subspec 'Mopub-plugin' do |pp|
-   pp.source_files = 'MytestADSDKDemo/Classes/Mopub-plugin/*'
-   end
-   
-   s.subspec 'Mediation' do |mm|
-     mm.subspec 'AppLovin' do |ap|
-       ap.source_files = 'MytestADSDKDemo/Classes/Mediation/AppLovin/Network/*'
-       ap.dependency 'AppLovinSDK', '6.14.9'
-     end
-     mm.subspec 'FaceBook' do |ff|
-       ff.source_files = 'MytestADSDKDemo/Classes/Mediation/FaceBook/NetWork/*'
-       ff.dependency 'FBAudienceNetwork', '6.2.1'
-     end
-     mm.subspec 'IronSource' do |ii|
-       ii.source_files = 'MytestADSDKDemo/Classes/Mediation/IronSource/Network/*'
-       ii.dependency 'IronSourceSDK', '7.0.4.0'
-     end
-     mm.subspec 'AdMob' do |ad|
-       ad.source_files = 'MytestADSDKDemo/Classes/Mediation/MoPub-AdMob-Adapters/AdMob/*'
-       ad.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
-     end
-   end
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
   #s.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
-  #s.dependency 'IronSourceSDK', '7.0.4.0'
-  #s.dependency 'AppLovinSDK', '6.14.9'
-  #s.dependency 'FBAudienceNetwork', '6.2.1'
-  #s.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
-  #s.dependency 'AmazonPublisherServicesSDK', '3.4.2'
+  s.dependency 'FBSDKCoreKit', '~>8.1'
+  s.dependency 'AppLovinSDK', '6.14.9'
+    s.dependency 'MoPub-AdMob-Adapters', '7.68.0.0'
+  s.dependency 'Fyber_Marketplace_MoPubAdapter', '7.7.3'
+  s.dependency 'MoPub-Chartboost-Adapters', '8.3.1.1'
+  s.dependency 'mopub-ios-sdk', '5.14.1'
+  s.dependency 'MoPub-UnityAds-Adapters', '3.5.1.0'
+  s.dependency 'MoPub-Vungle-Adapters', '6.8.1.0'
+  s.dependency 'PureLayout'
+    s.dependency 'FBAudienceNetwork', '6.2.1'
+      s.dependency 'IronSourceSDK', '7.0.4.0'
+            s.dependency 'AmazonPublisherServicesMoPubAdapter', '1.2.0'
+                  s.dependency 'AmazonPublisherServicesSDK', '3.4.2'
+  s.dependency 'smaato-ios-sdk-mediation-mopub' ,'5.14.1.0'
 end

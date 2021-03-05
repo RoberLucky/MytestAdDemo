@@ -12,15 +12,15 @@
 #import "FacebookNativeCustomEvent.h"
 #import "MPGoogleAdMobNativeRenderer.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-    // life cycle management
-    void UnityPause(int pause);
-    void UnitySendMessage(const char* obj, const char* method, const char* msg);
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+//    // life cycle management
+//    void UnityPause(int pause);
+//    void UnitySendMessage(const char* obj, const char* method, const char* msg);
+//#ifdef __cplusplus
+//}
+//#endif
 
 #define SCREEN_WIDTH ([UIScreen mainScreen].bounds.size.width)
 #define SCREEN_HEIGHT ([UIScreen mainScreen].bounds.size.height)
@@ -31,7 +31,7 @@ static MoPubBackgroundEventCallback _bgEventCallback;
 
 @implementation MoPubManager
 
-@synthesize adView = _adView, locationManager = _locationManager, lastKnownLocation = _lastKnownLocation, bannerPosition,  mrecPosition, banPosition, nativePosition, mrecAutoPosition;
+@synthesize adView = _adView, secondAdView = _secondAdView, locationManager = _locationManager, lastKnownLocation = _lastKnownLocation, bannerPosition,  mrecPosition, banPosition, nativePosition, mrecAutoPosition;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark NSObject
@@ -89,7 +89,9 @@ static MoPubBackgroundEventCallback _bgEventCallback;
     NSString* json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if (bg && _bgEventCallback != nil)
         _bgEventCallback(eventName.UTF8String, json.UTF8String);
-    UnitySendMessage("MoPubManager", eventName.UTF8String, json.UTF8String);
+    //UnitySendMessage("MoPubManager", eventName.UTF8String, json.UTF8String);
+    NSDictionary *dic = @{@"eventName":eventName,@"json":json};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UnitySendMessageNotification" object:dic];
 }
 
 
@@ -98,6 +100,12 @@ static MoPubBackgroundEventCallback _bgEventCallback;
     [MoPubManager sendUnityEvent:eventName withArgs:args backgroundOK:NO];
 }
 
+
++ (void)setUnityPauseEvent:(BOOL)pause {
+    NSNumber *boolNum = [NSNumber numberWithBool:pause];
+    NSDictionary *dic = @{@"isPause":boolNum};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UnityPauseStatusNotification" object:dic];
+}
 
 - (void)sendUnityEvent:(NSString*)eventName backgroundOK:(BOOL)bg
 {
@@ -113,56 +121,56 @@ static MoPubBackgroundEventCallback _bgEventCallback;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Private
 
-- (void)adjustAdViewFrameToShowAdView
+- (void)adjustAdViewFrameToShowAdView:(UIView*)view
 {
     if (@available(iOS 11.0, *)) {
-        UIView* superview = _adView.superview;
+        UIView* superview = view.superview;
         if (superview) {
             //------修改处2
-            [_adView removeConstraints:_adView.constraints];
+            [view removeConstraints:_adView.constraints];
             //------
-            _adView.translatesAutoresizingMaskIntoConstraints = NO;
+            view.translatesAutoresizingMaskIntoConstraints = NO;
             NSMutableArray<NSLayoutConstraint*>* constraints = [NSMutableArray arrayWithArray:@[
-                [_adView.widthAnchor constraintEqualToConstant:CGRectGetWidth(_adView.frame)],
-                [_adView.heightAnchor constraintEqualToConstant:CGRectGetHeight(_adView.frame)],
+                [view.widthAnchor constraintEqualToConstant:CGRectGetWidth(view.frame)],
+                [view.heightAnchor constraintEqualToConstant:CGRectGetHeight(view.frame)],
             ]];
             switch(bannerPosition) {
                 case MoPubAdPositionTopLeft:
-                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
-                                                       [_adView.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [view.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor]]];
                     break;
                 case MoPubAdPositionTopCenter:
-                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
-                                                       [_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [view.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor]]];
                     break;
                 case MoPubAdPositionTopRight:
-                    [constraints addObjectsFromArray:@[[_adView.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
-                                                       [_adView.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.topAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.topAnchor],
+                                                       [view.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor]]];
                     break;
                 case MoPubAdPositionCentered:
-                    [constraints addObjectsFromArray:@[[_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor],
-                                                       [_adView.centerYAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerYAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor],
+                                                       [view.centerYAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerYAnchor]]];
                     break;
                 case MoPubAdPositionBottomLeft:
-                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
-                                                       [_adView.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [view.leftAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.leftAnchor]]];
                     break;
                 case MoPubAdPositionBottomCenter:
-                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
-                                                       [_adView.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [view.centerXAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.centerXAnchor]]];
                     break;
                 case MoPubAdPositionBottomRight:
-                    [constraints addObjectsFromArray:@[[_adView.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
-                                                       [_adView.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor]]];
+                    [constraints addObjectsFromArray:@[[view.bottomAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.bottomAnchor],
+                                                       [view.rightAnchor constraintEqualToAnchor:superview.safeAreaLayoutGuide.rightAnchor]]];
                     break;
             }
             [NSLayoutConstraint activateConstraints:constraints];
-            NSLog(@"setting adView frame: %@", NSStringFromCGRect(_adView.frame));
+            NSLog(@"setting adView frame: %@", NSStringFromCGRect(view.frame));
         } else
             NSLog(@"_adview.superview was nil! Was the ad view not added to another view?@");
     } else {
         // fetch screen dimensions and useful values
-        CGRect origFrame = _adView.frame;
+        CGRect origFrame = view.frame;
 
         CGFloat screenHeight = [UIScreen mainScreen].bounds.size.height;
         CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
@@ -171,40 +179,40 @@ static MoPubBackgroundEventCallback _bgEventCallback;
             case MoPubAdPositionTopLeft:
                 origFrame.origin.x = 0;
                 origFrame.origin.y = 0;
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
                 break;
             case MoPubAdPositionTopCenter:
                 origFrame.origin.x = (screenWidth / 2) - (origFrame.size.width / 2);
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin);
                 break;
             case MoPubAdPositionTopRight:
                 origFrame.origin.x = screenWidth - origFrame.size.width;
                 origFrame.origin.y = 0;
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin);
                 break;
             case MoPubAdPositionCentered:
                 origFrame.origin.x = (screenWidth / 2) - (origFrame.size.width / 2);
                 origFrame.origin.y = (screenHeight / 2) - (origFrame.size.height / 2);
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin);
                 break;
             case MoPubAdPositionBottomLeft:
                 origFrame.origin.x = 0;
                 origFrame.origin.y = screenHeight - origFrame.size.height;
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
                 break;
             case MoPubAdPositionBottomCenter:
                 origFrame.origin.x = (screenWidth / 2) - (origFrame.size.width / 2);
                 origFrame.origin.y = screenHeight - origFrame.size.height;
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin);
                 break;
             case MoPubAdPositionBottomRight:
-                origFrame.origin.x = screenWidth - _adView.frame.size.width;
+                origFrame.origin.x = screenWidth - view.frame.size.width;
                 origFrame.origin.y = screenHeight - origFrame.size.height;
-                _adView.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin);
+                view.autoresizingMask = (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin);
                 break;
         }
 
-        _adView.frame = origFrame;
+        view.frame = origFrame;
         NSLog(@"setting adView frame: %@", NSStringFromCGRect(origFrame));
     }
 }
@@ -272,6 +280,8 @@ static MoPubBackgroundEventCallback _bgEventCallback;
     // kill the current adView if we have one
     if (_adView)
         [self hideBanner:YES];
+    if (_secondAdView)
+        [self hideBanner:YES];
     if (!self.isMrecPosition && (height == 250)) {
         mrecPosition = position;
         self.isMrecPosition = YES;
@@ -285,7 +295,8 @@ static MoPubBackgroundEventCallback _bgEventCallback;
     } else {
         bannerPosition = mrecPosition;
     }
-
+    self.firstBannerIsLoad = false;
+    self.secondBannerIsLoad = false;
     CGSize requestedBannerSize = CGSizeMake(width, height);
     _adView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
     
@@ -294,11 +305,29 @@ static MoPubBackgroundEventCallback _bgEventCallback;
         _adView.location = _lastKnownLocation;
 
     _adView.delegate = self;
-    _adView.keywords = keywords;
+    //_adView.keywords = keywords;
+    _adView.keywords = @"firstAdView";
     _adView.userDataKeywords = userDataKeywords;
     _autorefresh = YES;
     [[MoPubManager unityViewController].view addSubview:_adView];
     [_adView loadAd];
+    
+    if (height == 50) {
+        // 第二个banner
+        _secondAdView = [[MPAdView alloc] initWithAdUnitId:_adUnitId size:requestedBannerSize];
+
+        // do we have location enabled?
+        if (_locationEnabled && _lastKnownLocation)
+            _secondAdView.location = _lastKnownLocation;
+
+        _secondAdView.delegate = self;
+        //_adView.keywords = keywords;
+        _secondAdView.keywords = @"secondAdView";
+        _secondAdView.userDataKeywords = userDataKeywords;
+        [[MoPubManager unityViewController].view addSubview:_secondAdView];
+        [_secondAdView loadAd];
+    }
+    
 }
 
 
@@ -348,30 +377,79 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 - (void)destroyBanner
 {
     [_adView removeFromSuperview];
+    [_secondAdView removeFromSuperview];
     _adView.delegate = nil;
+    _secondAdView.delegate = nil;
+    _secondAdView = nil;
     self.adView = nil;
 }
 
 
 - (void)showBanner
 {
-    if (!_adView)
+    if (self.firstBannerIsLoad && self.secondBannerIsLoad) {
         return;
-
-    _adView.hidden = NO;
-    if (_autorefresh)
-        [_adView startAutomaticallyRefreshingContents];
+    }
+    if (!_adView || !_secondAdView)
+        return;
+    if (self.firstBannerIsLoad && self.secondBannerIsShowing) {
+        [self.adView stopAutomaticallyRefreshingContents];
+    }
+    if (self.secondBannerIsLoad && self.firstBannerIsShowing) {
+        [self.secondAdView stopAutomaticallyRefreshingContents];
+    }
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC);
+    __weak __typeof__(self) weakSelf = self;
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+        if (self->_autorefresh) {
+            [weakSelf.adView startAutomaticallyRefreshingContents];
+            [weakSelf.secondAdView startAutomaticallyRefreshingContents];
+        }
+        if (weakSelf.firstBannerIsShowing && weakSelf.secondBannerIsLoad) {
+            weakSelf.firstBannerIsShowing = false;
+            weakSelf.secondBannerIsShowing = true;
+            weakSelf.secondBannerIsLoad = false;
+            weakSelf.firstBannerIsLoad = false;
+            weakSelf.adView.hidden = YES;
+            weakSelf.secondAdView.hidden = NO;
+            //[weakSelf.secondAdView stopAutomaticallyRefreshingContents];
+            //[weakSelf.adView forceRefreshAd];
+            //[weakSelf.adView startAutomaticallyRefreshingContents];
+        } else if (weakSelf.secondBannerIsShowing && weakSelf.firstBannerIsLoad) {
+            weakSelf.secondBannerIsShowing = false;
+            weakSelf.firstBannerIsShowing = true;
+            weakSelf.firstBannerIsLoad = false;
+            weakSelf.secondAdView.hidden = YES;
+            weakSelf.adView.hidden = NO;
+            //[weakSelf.adView stopAutomaticallyRefreshingContents];
+            //[weakSelf.secondAdView forceRefreshAd];
+            //[weakSelf.secondAdView startAutomaticallyRefreshingContents];
+        } else {
+            NSLog(@"其他情况8888888888");
+        }
+    });
+//    _adView.hidden = NO;
+//
+//    if (_autorefresh)
+//        [_adView startAutomaticallyRefreshingContents];
+ 
 }
 
 
 - (void)hideBanner:(BOOL)shouldDestroy
 {
-    if (!_adView)
+    if (!_adView || !_secondAdView)
         return;
 
-    _adView.hidden = YES;
-    [_adView stopAutomaticallyRefreshingContents];
-
+    if (self.firstBannerIsShowing) {
+        _adView.hidden = YES;
+        [_adView stopAutomaticallyRefreshingContents];
+    }
+    if (self.secondBannerIsShowing) {
+        _secondAdView.hidden = YES;
+        [_secondAdView stopAutomaticallyRefreshingContents];
+    }
+    
     if (shouldDestroy)
         [self destroyBanner];
 }
@@ -400,18 +478,30 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
     _autorefresh = enabled;
     if (!_adView || _adView.hidden)
         return;
-    else if (enabled)
+    else if (enabled) {
         [_adView startAutomaticallyRefreshingContents];
-    else
+    
+    } else {
         [_adView stopAutomaticallyRefreshingContents];
+    
+    }
+    
+    if (!_secondAdView || _secondAdView.hidden) {
+        return;
+    } else if (enabled) {
+        [_secondAdView startAutomaticallyRefreshingContents];
+    } else {
+        [_secondAdView stopAutomaticallyRefreshingContents];
+    }
 }
 
 
 - (void)forceRefresh
 {
-    if (!_adView)
+    if (!_adView || !_secondAdView)
         return;
     [_adView forceRefreshAd];
+    [_secondAdView forceRefreshAd];
 }
 
 
@@ -639,7 +729,20 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 */
 - (void)adView:(MPAdView *)view didFailToLoadAdWithError:(NSError *)error
 {
-    _adView.hidden = YES;
+    
+    if (view.maxAdSize.height == 50) {
+        // banner 加载失败
+        if ([view.keywords isEqualToString:@"firstAdView"]) {
+//            _adView.hidden = YES;
+//            _secondAdView.hidden = NO;
+//            [_secondAdView forceRefreshAd];
+            self.firstBannerIsLoad = false;
+            [_adView startAutomaticallyRefreshingContents];
+        } else {
+            self.secondBannerIsLoad = false;
+            [_secondAdView startAutomaticallyRefreshingContents];
+        }
+    }
     [[self class] sendUnityEvent:@"EmitAdFailedEvent" withArgs:@[_adUnitId, error.localizedDescription]];
 }
 
@@ -652,10 +755,13 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 - (void)adViewDidLoadAd:(MPAdView *)view adSize:(CGSize)adSize
 {
     // resize the banner
-    CGRect newFrame = _adView.frame;
+    //self.requestingConfiguration.refreshInterval
+    
+    CGRect newFrame = view.frame;
     newFrame.size = adSize;
     _adView.frame = newFrame;
-
+    _secondAdView.frame = newFrame;
+    
     if(adSize.height == 250) {
         // Mrec
         _adView.hidden = YES;
@@ -663,15 +769,46 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
         [_adView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:mrecAutoPosition.y];
         [_adView autoSetDimensionsToSize:adSize];
     } else {
-        _adView.hidden = NO;
-        [self adjustAdViewFrameToShowAdView];
-        [_adView setNeedsLayout];
+        if ([view.keywords isEqualToString:@"firstAdView"]) {
+
+            self.firstBannerIsLoad = true;
+            [self adjustAdViewFrameToShowAdView:_adView];
+            [_adView setNeedsLayout];
+            if(!self.secondBannerIsShowing && !self.firstBannerIsShowing) {
+                // 第一个banner加载完成
+               
+                self.firstBannerIsShowing = true;
+               // self.secondBannerIsShowing = false;
+                _secondAdView.hidden = YES;
+                //[self.secondAdView stopAutomaticallyRefreshingContents];
+                _adView.hidden = NO;
+                
+            }
+        } else {
+            self.secondBannerIsLoad = true;
+            bannerPosition = MoPubAdPositionTopCenter;
+            [_secondAdView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+            [_secondAdView autoAlignAxisToSuperviewAxis:ALAxisVertical];
+            [_secondAdView autoSetDimensionsToSize:adSize];
+            //[self adjustAdViewFrameToShowAdView:_secondAdView];
+            //[_secondAdView setNeedsLayout];
+            // 第二个banner加载完成
+            if (!self.firstBannerIsShowing && !self.secondBannerIsShowing) {
+               
+                self.secondBannerIsShowing = true;
+              //  self.firstBannerIsShowing = false;
+                _secondAdView.hidden = NO;
+                _adView.hidden = YES;
+            }
+           
+        }
+
+        
     }
     
 
     [[self class] sendUnityEvent:@"EmitAdLoadedEvent" withArgs:@[_adUnitId, @(_adView.frame.size.width), @(_adView.frame.size.height)]];
 }
-
 
 /*
 *  These callbacks are triggered when the ad view is about to present/dismiss a
@@ -682,20 +819,20 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 - (void)willPresentModalViewForAd:(MPAdView*)view
 {
     [self sendUnityEvent:@"EmitAdExpandedEvent"];
-    UnityPause(true);
+    [[self class] setUnityPauseEvent:true];
 }
 
 
 - (void)didDismissModalViewForAd:(MPAdView*)view
 {
     [self sendUnityEvent:@"EmitAdCollapsedEvent"];
-    UnityPause(false);
+    [[self class] setUnityPauseEvent:false];
 }
 
 
 - (void)adViewShouldClose:(MPAdView*)view
 {
-    UnityPause(false);
+    [[self class] setUnityPauseEvent:false];
     [self hideBanner:YES];
 }
 
@@ -742,7 +879,7 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 - (void)interstitialDidAppear:(MPInterstitialAdController*)interstitial
 {
     NSLog(@"加载成功并显示Interstitial时间：%@",[NSDate date]);
-    UnityPause(true);
+    [[self class] setUnityPauseEvent:true];
     [self sendUnityEvent:@"EmitInterstitialShownEvent"];
 }
 
@@ -750,7 +887,7 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 - (void)interstitialDidDisappear:(MPInterstitialAdController*)interstitial
 {
     NSLog(@"关闭消失Interstitial时间：%@",[NSDate date]);
-    UnityPause(false);
+    [[self class] setUnityPauseEvent:false];
     [self sendUnityEvent:@"EmitInterstitialDismissedEvent"];
     
 }
@@ -802,7 +939,7 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 
 - (void)rewardedVideoAdDidAppearForAdUnitID:(NSString*)adUnitID
 {
-    UnityPause(true);
+    [[self class] setUnityPauseEvent:true];
     [self sendUnityEvent:@"EmitRewardedVideoShownEvent"];
 }
 
@@ -811,7 +948,7 @@ __deprecated_msg("createBanner has been deprecated, please use requestBanner ins
 
 - (void)rewardedVideoAdDidDisappearForAdUnitID:(NSString*)adUnitID
 {
-    UnityPause(false);
+    [[self class] setUnityPauseEvent:false];
     [self sendUnityEvent:@"EmitRewardedVideoClosedEvent"];
 }
 

@@ -11,17 +11,17 @@
 #import <DTBiOSSDK/DTBiOSSDK.h>
 #import "MoPubManager.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-    // life cycle management
-    void UnityPause(int pause);
-    void UnitySendMessage(const char* obj, const char* method, const char* msg);
-#ifdef __cplusplus
-}
-#endif
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+//    // life cycle management
+//    void UnityPause(int pause);
+//    void UnitySendMessage(const char* obj, const char* method, const char* msg);
+//#ifdef __cplusplus
+//}
+//#endif
 
-struct utsname systemInfo;
+//struct utsname systemInfo;
 
 @implementation ApsManager
 
@@ -86,6 +86,12 @@ NSString * const MrecID = @"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
     [adLoader loadAd:[ApsMrecLoader sharedSingleton]];
     
 }
+
+- (void)sendMessageToUnityWithObj:(NSString*)obj method:(NSString*)method msg:(NSString*)msg{
+    NSDictionary *dic = @{@"objName":obj,@"eventName":method,@"json":msg};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UnitySendMessageNotification" object:dic];
+}
+
 @end
 
 @implementation ApsBannerLoader
@@ -104,11 +110,11 @@ NSString * const MrecID = @"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 }
 
 - (void)onFailure:(DTBAdError)error {
-    UnitySendMessage("APSManager", "onBannerFailure", [[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]] UTF8String] );
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onBannerFailure" msg:[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]]];
 }
 
 - (void)onSuccess:(DTBAdResponse *)adResponse {
-    UnitySendMessage("APSManager", "onBannerSuccess", [[adResponse keywordsForMopub] UTF8String]);
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onBannerSuccess" msg:[adResponse keywordsForMopub]];
 }
 
 @end
@@ -129,11 +135,11 @@ NSString * const MrecID = @"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 }
 
 - (void)onFailure:(DTBAdError)error {
-    UnitySendMessage("APSManager", "onInterstitialFailure", [[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]] UTF8String] );
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onInterstitialFailure" msg:[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]]];
 }
 
 - (void)onSuccess:(DTBAdResponse *)adResponse {
-    UnitySendMessage("APSManager", "onInterstitialSuccess", [[adResponse keywordsForMopub] UTF8String]);
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onInterstitialSuccess" msg:[adResponse keywordsForMopub]];
 }
 @end
 
@@ -153,12 +159,11 @@ NSString * const MrecID = @"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 }
 
 - (void)onFailure:(DTBAdError)error {
-    UnitySendMessage("APSManager", "onRewardFailure", [[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]] UTF8String] );
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onRewardFailure" msg:[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]]];
 }
 
 - (void)onSuccess:(DTBAdResponse *)adResponse {
-    NSString * sad = [adResponse keywordsForMopub];
-    UnitySendMessage("APSManager", "onRewardSuccess", [[adResponse keywordsForMopub] UTF8String]);
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onRewardSuccess" msg:[adResponse keywordsForMopub]];
 }
 @end
 
@@ -178,11 +183,11 @@ NSString * const MrecID = @"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 }
 
 - (void)onFailure:(DTBAdError)error {
-    UnitySendMessage("APSManager", "onMrecFailure", [[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]] UTF8String] );
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onMrecFailure" msg:[NSString stringWithFormat:@"%@",[NSNumber numberWithInt:(int)error]]];
 }
 
 - (void)onSuccess:(DTBAdResponse *)adResponse {
-    UnitySendMessage("APSManager", "onMrecSuccess", [[adResponse keywordsForMopub] UTF8String]);
+    [[ApsManager sharedSingleton] sendMessageToUnityWithObj:@"APSManager" method:@"onMrecSuccess" msg:[adResponse keywordsForMopub]];
 }
 
 @end
