@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MytestADSDKDemo'
-  s.version          = '1.1.1'
+  s.version          = '2.3.0'
   s.summary          = 'A short description of MytestADSDKDemo.'
 
 # This description is used to generate tags and improve search results.
@@ -39,10 +39,10 @@ Pod::Spec.new do |s|
 
   s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'UIKit'
-  #s.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
+  s.dependency 'Google-Mobile-Ads-SDK', '7.68.0'
   s.dependency 'FBSDKCoreKit', '~>8.1'
   s.dependency 'AppLovinSDK', '6.14.9'
-    s.dependency 'MoPub-AdMob-Adapters', '7.68.0.0'
+    #s.dependency 'MoPub-AdMob-Adapters', '7.68.0.0'
   s.dependency 'Fyber_Marketplace_MoPubAdapter', '7.7.3'
   s.dependency 'MoPub-Chartboost-Adapters', '8.3.1.1'
   s.dependency 'mopub-ios-sdk', '5.14.1'
